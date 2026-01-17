@@ -12,12 +12,17 @@ import { useToast } from "@/hooks/use-toast";
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-
-import { 
-  generateCivilConcept, CivilConceptInput, CivilConceptOutput,
-  generateArchitecturalConcept, ArchitecturalConceptInput, ArchitecturalConceptOutput,
-  generateInteriorConcept, InteriorConceptInput, InteriorConceptOutput
+import {
+  generateCivilConcept,
+  generateArchitecturalConcept,
+  generateInteriorConcept,
 } from '@/ai/flows/staged-house-planning';
+import type {
+  CivilConceptInput, CivilConceptOutput,
+  ArchitecturalConceptInput, ArchitecturalConceptOutput,
+  InteriorConceptInput, InteriorConceptOutput,
+} from '@/ai/flows/staged-house-planning.types';
+
 
 type Stage = 'draft' | 'civil' | 'architecture' | 'interior' | 'finalized';
 type Status = 'pending' | 'generated' | 'approved' | 'revision';

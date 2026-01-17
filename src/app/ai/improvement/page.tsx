@@ -9,7 +9,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { BrainCircuit, Info, Upload, Wand2, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { placeholderImages } from "@/lib/placeholder-images";
-import { planImprovement, PlanImprovementInput, PlanImprovementOutput } from "@/ai/flows/plan-improvement";
+import { planImprovement } from "@/ai/flows/plan-improvement";
+import type { PlanImprovementInput, PlanImprovementOutput } from "@/ai/flows/plan-improvement.types";
 import { useToast } from '@/hooks/use-toast';
 
 async function improvePlanAction(input: PlanImprovementInput): Promise<PlanImprovementOutput | { error: string }> {
