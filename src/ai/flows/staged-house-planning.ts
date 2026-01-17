@@ -96,7 +96,7 @@ Approved Civil Plan Drawing:
 User Feedback for this stage: {{{userFeedback}}}
 
 Your task is to generate the following as data URIs:
-- architecturalPlanDataUri: A detailed 2D architectural floor plan. This should clearly show room connections, circulation paths, and precise conceptual placements for doors and windows.
+- architecturalPlanDataUri: A photorealistic 3D floor plan showing the interior layout with rooms, doors, windows, and basic furniture placement, similar to a dollhouse view. This should clearly show room connections and circulation paths.
 - threeDModelDataUri: A high-quality, photorealistic 3D exterior rendering of the building. To provide a comprehensive view, this should feel like a model that can be viewed from multiple angles. While it is a 2D image, it should be rendered with depth and perspective to give a clear sense of the building's form, materials, and overall aesthetic.
 
 You must also provide the following details in text format:

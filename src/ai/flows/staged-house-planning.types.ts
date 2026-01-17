@@ -51,7 +51,7 @@ export const ArchitecturalConceptOutputSchema = z.object({
   architecturalPlanDataUri: z
     .string()
     .describe(
-      "A data URI of the 2D architectural floor plan, showing room connections and door/window placements. Format: 'data:<mimetype>;base64,<encoded_data>'."
+      "A data URI of a photorealistic 3D floor plan, showing the interior layout with rooms, doors, windows, and basic furniture placement, similar to a dollhouse view. Format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
   threeDModelDataUri: z
     .string()
