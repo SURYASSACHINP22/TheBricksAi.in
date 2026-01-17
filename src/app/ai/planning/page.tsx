@@ -127,7 +127,7 @@ export default function StagedAIHousePlanningPage() {
             setArchPlan(result);
             setArchStatus('generated');
             setArchFeedback('');
-            toast({ title: civilFeedback ? 'Architectural Concept Revised!' : 'Architectural Concept Generated!', description: 'Please review the architectural details.' });
+            toast({ title: 'Architectural Concept Generated!', description: 'Please review the architectural details.' });
             setCivilFeedback('');
         }
     };
@@ -175,7 +175,7 @@ export default function StagedAIHousePlanningPage() {
             setInteriorPlan(result);
             setInteriorStatus('generated');
             setInteriorFeedback('');
-            toast({ title: archFeedback ? 'Interior Design Revised' : 'Interior Design Concept Generated!', description: 'Please review the final design concepts.' });
+            toast({ title: 'Interior Design Concept Generated!', description: 'Please review the final design concepts.' });
             setArchFeedback('');
         }
     };
