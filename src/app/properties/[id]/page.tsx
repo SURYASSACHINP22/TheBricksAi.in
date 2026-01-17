@@ -245,5 +245,3 @@ export default function PropertyDetailsPage({ params }: { params: { id: string }
     </div>
   );
 }
-
-    
