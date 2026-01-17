@@ -33,7 +33,7 @@ const civilPrompt = ai.definePrompt({
   output: { schema: CivilConceptOutputSchema },
   prompt: `You are a master Civil Engineer AI for BrickAi, known for creating clear, detailed, and professional-grade conceptual drawings.
 Your task is to generate the first stage of a house plan: the Civil Engineering Concept.
-Adhere strictly to the user's requirements. Your output MUST be a set of high-quality, easy-to-understand conceptual drawings and diagrams in data URI format. The drawings should be clean, precise, and well-labeled, suitable for a client presentation.
+Adhere strictly to the user's requirements. Your output MUST be a set of high-quality, easy-to-understand conceptual drawings and diagrams in data URI format. The data URIs must represent PNG images (i.e., 'data:image/png;base64,...'). Do not use SVG or any other format. The drawings should be clean, precise, and well-labeled, suitable for a client presentation.
 
 User Requirements:
 - Property Details: {{{propertyDetails}}}
@@ -54,7 +54,7 @@ User Feedback for Revision:
 {{{userFeedback}}}
 {{/if}}
 
-Your output must contain the following high-quality drawings as data URIs:
+Your output must contain the following high-quality drawings as data URIs for PNG images:
 - civilPlanDataUri: A detailed conceptual civil layout drawing. It must clearly show building placement, boundary lines, setbacks from all sides, site utilization, and access points.
 - foundationPlanDataUri: A detailed conceptual drawing of the foundation plan, indicating the type of foundation proposed (e.g., raft, isolated footing) and its general layout.
 - columnLayoutDataUri: A precise conceptual drawing showing the grid and exact positions of all structural columns/poles.
@@ -93,14 +93,14 @@ const architecturalPrompt = ai.definePrompt({
     output: { schema: ArchitecturalConceptOutputSchema },
     prompt: `You are an expert Architect AI for BrickAi, specializing in photorealistic 3D visualization.
 Your task is to generate the second stage: the Architectural Concept.
-You MUST build upon the approved Civil Concept drawing provided. Do not change the core layout.
+You MUST build upon the approved Civil Concept drawing provided, which is a PNG image. Do not change the core layout.
 
 Approved Civil Plan Drawing:
 {{media url=approvedCivilPlanDataUri}}
 
 User Feedback for this stage: {{{userFeedback}}}
 
-Your task is to generate the following as data URIs:
+Your task is to generate the following as data URIs for PNG images ('data:image/png;base64,...'). Do not use SVG or any other format:
 - architecturalPlanDataUri: A photorealistic 3D floor plan showing the interior layout with rooms, doors, windows, and basic furniture placement, similar to a dollhouse view. This should clearly show room connections and circulation paths.
 - threeDModelDataUri: A high-quality, photorealistic 3D exterior rendering of the building. To provide a comprehensive view, this should feel like a model that can be viewed from multiple angles. While it is a 2D image, it should be rendered with depth and perspective to give a clear sense of the building's form, materials, and overall aesthetic.
 
@@ -137,14 +137,14 @@ const interiorPrompt = ai.definePrompt({
     output: { schema: InteriorConceptOutputSchema },
     prompt: `You are a visionary Interior Designer AI for BrickAi.
 Your task is to generate the final stage: the Interior Design Concept.
-You MUST work within the approved architectural plan provided.
+You MUST work within the approved architectural plan provided, which is a PNG image.
 
 Approved Architectural Plan Drawing:
 {{media url=approvedArchitecturalPlanDataUri}}
 
 User Feedback for this stage: {{{userFeedback}}}
 
-Your task is to generate the following as data URIs:
+Your task is to generate the following as data URIs for PNG images ('data:image/png;base64,...'). Do not use SVG or any other format:
 - interiorRenderDataUri: A high-quality, photorealistic 3D conceptual rendering of a key interior area (e.g., the main living space). This should showcase the suggested color palette, materials, and lighting concept in action.
 - furnitureLayoutPlanDataUri: A clear and detailed 2D conceptual furniture layout diagram for key rooms, showing traffic flow and spacing.
 

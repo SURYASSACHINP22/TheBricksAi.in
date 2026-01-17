@@ -31,11 +31,11 @@ const planImprovementPrompt = ai.definePrompt({
   output: {schema: PlanImprovementOutputSchema},
   prompt: `You are an AI assistant specialized in improving house plans.
 
-You will receive an original house plan and should generate an improved version of the plan, explaining the changes made.
+You will receive an original house plan (usually a PNG or JPEG) and should generate an improved version of the plan, explaining the changes made.
 
 Original Plan: {{media url=originalPlanDataUri}}
 
-Respond with the improved plan and a detailed explanation of the changes. Be sure to include a data URI for the plan, as well as a textual explanation of the changes that were made.`,  
+Respond with the improved plan and a detailed explanation of the changes. The output 'improvedPlanDataUri' must be a data URI for a PNG image ('data:image/png;base64,...'). Do not use SVG or other formats.`,
 });
 
 const planImprovementFlow = ai.defineFlow(
