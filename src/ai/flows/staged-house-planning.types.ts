@@ -14,7 +14,21 @@ export const CivilConceptInputSchema = z.object({
 export type CivilConceptInput = z.infer<typeof CivilConceptInputSchema>;
 
 export const CivilConceptOutputSchema = z.object({
-  conceptualLayout: z.string().describe('A high-level description of the civil layout, including building placement and site utilization.'),
+  civilPlanDataUri: z
+    .string()
+    .describe(
+      "A data URI of the primary conceptual civil layout drawing, including building placement and site utilization. Must include a MIME type and use Base64 encoding. Format: 'data:<mimetype>;base64,<encoded_data>'."
+    ),
+  foundationPlanDataUri: z
+    .string()
+    .describe(
+      "A data URI of the conceptual foundation plan. Format: 'data:<mimetype>;base64,<encoded_data>'."
+    ),
+  columnLayoutDataUri: z
+    .string()
+    .describe(
+      "A data URI of the conceptual column layout diagram. Format: 'data:<mimetype>;base64,<encoded_data>'."
+    ),
   floorAllocation: z.string().describe('A floor-by-floor breakdown of space allocation.'),
   roomSizes: z.string().describe('Approximate sizes for major rooms.'),
   stairAndWetAreaLogic: z.string().describe('Logic for the placement of stairs, bathrooms, and kitchen.'),
@@ -33,11 +47,19 @@ export const ArchitecturalConceptInputSchema = z.object({
 export type ArchitecturalConceptInput = z.infer<typeof ArchitecturalConceptInputSchema>;
 
 export const ArchitecturalConceptOutputSchema = z.object({
-  roomConnections: z.string().describe('Description of how rooms are interconnected, focusing on flow and movement.'),
-  doorWindowPlacement: z.string().describe('Conceptual placement of doors and windows for ventilation and access.'),
-  lightAndVentilation: z.string().describe('Strategy for natural light and cross-ventilation.'),
-  zoning: z.string().describe('Division of the house into public, private, and service zones.'),
+  architecturalPlanDataUri: z
+    .string()
+    .describe(
+      "A data URI of the 2D architectural floor plan, showing room connections and door/window placements. Format: 'data:<mimetype>;base64,<encoded_data>'."
+    ),
+  threeDModelDataUri: z
+    .string()
+    .describe(
+      "A data URI of a 3D rendering of the building's exterior structure. Format: 'data:<mimetype>;base64,<encoded_data>'."
+    ),
   architecturalStyleNotes: z.string().describe('Notes on how the architectural style is being incorporated.'),
+  zoning: z.string().describe('Division of the house into public, private, and service zones.'),
+  lightAndVentilation: z.string().describe('Strategy for natural light and cross-ventilation.'),
   disclaimer: z.string().default('This is a conceptual architectural plan. It requires validation by a licensed architect.'),
 });
 export type ArchitecturalConceptOutput = z.infer<typeof ArchitecturalConceptOutputSchema>;
@@ -53,11 +75,19 @@ export const InteriorConceptInputSchema = z.object({
 export type InteriorConceptInput = z.infer<typeof InteriorConceptInputSchema>;
 
 export const InteriorConceptOutputSchema = z.object({
-  furnitureLayout: z.string().describe('Room-by-room conceptual furniture layout ideas.'),
+  interiorRenderDataUri: z
+    .string()
+    .describe(
+      "A data URI of a 3D conceptual rendering of the main living space. Format: 'data:<mimetype>;base64,<encoded_data>'."
+    ),
+  furnitureLayoutPlanDataUri: z
+    .string()
+    .describe(
+      "A data URI of the 2D conceptual furniture layout plan. Format: 'data:<mimetype>;base64,<encoded_data>'."
+    ),
   colorPalette: z.string().describe('A suggested color palette with primary, secondary, and accent colors.'),
   materialSuggestions: z.string().describe('Suggestions for key materials (flooring, walls, countertops).'),
   lightingConcept: z.string().describe('Ideas for ambient, task, and accent lighting.'),
-  conceptualImagePrompt: z.string().describe('A text prompt for a text-to-image model to generate a conceptual 3D view of a key area (e.g., living room).'),
   disclaimer: z.string().default('This is a conceptual interior design. Final material and furniture selection should be done with a professional.'),
 });
 export type InteriorConceptOutput = z.infer<typeof InteriorConceptOutputSchema>;

@@ -7,11 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { BrainCircuit, Info, Loader2, Wand2, Check, Sparkles, Pencil, ArrowLeft, Download, Building, Home, Paintbrush } from "lucide-react";
+import { BrainCircuit, Info, Loader2, Wand2, Check, Sparkles, Pencil, ArrowLeft, Download, Building, Home, Paintbrush, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 import {
   generateCivilConcept,
   generateArchitecturalConcept,
@@ -150,22 +151,46 @@ export default function StagedAIHousePlanningPage() {
 
     const renderConceptCard = (title: string, content: Record<string, any> | null, disclaimer: string) => {
         if (!content) return null;
+        
+        const images = Object.entries(content).filter(([key]) => key.toLowerCase().includes('datauri'));
+        const texts = Object.entries(content).filter(([key]) => !key.toLowerCase().includes('datauri') && key !== 'disclaimer');
+
         return (
             <Card>
                 <CardHeader>
                     <CardTitle className='font-headline'>{title}</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                    {Object.entries(content).map(([key, value]) => {
-                        if (key === 'disclaimer' || key === 'conceptualImagePrompt') return null;
-                        const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-                        return (
-                            <div key={key}>
-                                <h4 className="font-semibold text-sm text-muted-foreground">{formattedKey}</h4>
-                                <p className="text-foreground whitespace-pre-wrap">{value}</p>
-                            </div>
-                        )
-                    })}
+                <CardContent className="space-y-6">
+                    {images.length > 0 && (
+                        <div className='space-y-4'>
+                            {images.map(([key, value]) => {
+                                const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/Data Uri/i, '').replace(/^./, str => str.toUpperCase());
+                                return (
+                                    <div key={key}>
+                                        <h4 className="font-semibold text-lg flex items-center gap-2 mb-2"><ImageIcon className="w-5 h-5 text-primary"/>{formattedKey}</h4>
+                                        <Image src={value} alt={formattedKey} width={800} height={600} className="rounded-md border bg-muted" />
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    )}
+                    
+                    {texts.length > 0 && images.length > 0 && <Separator />}
+
+                    {texts.length > 0 && (
+                        <div className="space-y-4">
+                            {texts.map(([key, value]) => {
+                                const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                                return (
+                                    <div key={key}>
+                                        <h4 className="font-semibold text-sm text-muted-foreground">{formattedKey}</h4>
+                                        <p className="text-foreground whitespace-pre-wrap">{value}</p>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    )}
+                    
                     <Separator />
                     <Alert variant="destructive">
                         <Info className="h-4 w-4" />
@@ -270,58 +295,69 @@ export default function StagedAIHousePlanningPage() {
                 )}
                 
                 {/* Stage: Civil */}
-                {currentStage === 'civil' && (
-                    <div>
+                {(currentStage === 'civil' || currentStage === 'architecture' || currentStage === 'interior' || currentStage === 'finalized') && civilPlan && (
+                    <div className={cn(currentStage !== 'civil' && 'opacity-60 pointer-events-none')}>
                         {renderConceptCard('Civil Engineering Concept', civilPlan, civilPlan?.disclaimer || '')}
-                        <div className="mt-6 flex justify-end gap-4">
-                            <Button variant="outline" disabled={isLoading}><Pencil/> Request Changes</Button>
-                            <Button className="bg-green-600 hover:bg-green-700" onClick={handleApproveCivil} disabled={isLoading}>
-                                {isLoading ? <Loader2 className="animate-spin"/> : <Sparkles/>} Approve & Generate Architecture
-                            </Button>
-                        </div>
+                        {currentStage === 'civil' && (
+                            <div className="mt-6 flex justify-end gap-4">
+                                <Button variant="outline" disabled={isLoading}><Pencil/> Request Changes</Button>
+                                <Button className="bg-green-600 hover:bg-green-700" onClick={handleApproveCivil} disabled={isLoading}>
+                                    {isLoading ? <Loader2 className="animate-spin"/> : <Sparkles/>} Approve & Generate Architecture
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 )}
 
+
                 {/* Stage: Architecture */}
-                {currentStage === 'architecture' && (
-                     <div>
+                {(currentStage === 'architecture' || currentStage === 'interior' || currentStage === 'finalized') && archPlan && (
+                     <div className={cn(currentStage !== 'architecture' && 'opacity-60 pointer-events-none')}>
                         {renderConceptCard('Architectural Concept', archPlan, archPlan?.disclaimer || '')}
-                        <div className="mt-6 flex justify-between gap-4">
-                            <Button variant="ghost" onClick={() => setCurrentStage('civil')} disabled={isLoading}><ArrowLeft/> Go Back to Civil</Button>
-                            <div className="flex gap-4">
-                                <Button variant="outline" disabled={isLoading}><Pencil/> Request Changes</Button>
-                                <Button className="bg-green-600 hover:bg-green-700" onClick={handleApproveArch} disabled={isLoading}>
-                                    {isLoading ? <Loader2 className="animate-spin"/> : <Sparkles/>} Approve & Generate Interior Design
-                                </Button>
+                        {currentStage === 'architecture' && (
+                            <div className="mt-6 flex justify-between gap-4">
+                                <Button variant="ghost" onClick={() => setCurrentStage('civil')} disabled={isLoading}><ArrowLeft/> Go Back to Civil</Button>
+                                <div className="flex gap-4">
+                                    <Button variant="outline" disabled={isLoading}><Pencil/> Request Changes</Button>
+                                    <Button className="bg-green-600 hover:bg-green-700" onClick={handleApproveArch} disabled={isLoading}>
+                                        {isLoading ? <Loader2 className="animate-spin"/> : <Sparkles/>} Approve & Generate Interior Design
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 )}
 
                 {/* Stage: Interior */}
-                {currentStage === 'interior' && (
-                     <div>
+                {(currentStage === 'interior' || currentStage === 'finalized') && interiorPlan && (
+                     <div className={cn(currentStage !== 'interior' && 'opacity-60 pointer-events-none')}>
                         {renderConceptCard('Interior Design Concept', interiorPlan, interiorPlan?.disclaimer || '')}
-                         {interiorPlan?.conceptualImagePrompt && (
-                             <Card className="mt-4">
-                                 <CardHeader><CardTitle className="font-headline">Conceptual 3D View</CardTitle></CardHeader>
-                                 <CardContent>
-                                     <p className="text-sm text-muted-foreground mb-4">You can use the following prompt with an image generation tool to visualize your space:</p>
-                                     <Textarea readOnly value={interiorPlan.conceptualImagePrompt} rows={3} />
-                                 </CardContent>
-                             </Card>
-                         )}
-                        <div className="mt-6 flex justify-between gap-4">
-                            <Button variant="ghost" onClick={() => setCurrentStage('architecture')} disabled={isLoading}><ArrowLeft/> Go Back to Architecture</Button>
-                            <div className="flex gap-4">
-                                <Button variant="outline" disabled={isLoading}><Pencil/> Request Changes</Button>
-                                <Button className="bg-green-600 hover:bg-green-700" onClick={handleApproveInterior} disabled={isLoading}>
-                                    <Sparkles/> Finalize Plan
-                                </Button>
+                        {currentStage === 'interior' && (
+                            <div className="mt-6 flex justify-between gap-4">
+                                <Button variant="ghost" onClick={() => setCurrentStage('architecture')} disabled={isLoading}><ArrowLeft/> Go Back to Architecture</Button>
+                                <div className="flex gap-4">
+                                    <Button variant="outline" disabled={isLoading}><Pencil/> Request Changes</Button>
+                                    <Button className="bg-green-600 hover:bg-green-700" onClick={handleApproveInterior} disabled={isLoading}>
+                                        <Sparkles/> Finalize Plan
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 )}
+
+                {/* Loading State */}
+                {isLoading && (
+                  <Card>
+                    <CardContent className="pt-6 text-center">
+                      <div className="flex justify-center items-center gap-4">
+                        <Loader2 className="animate-spin h-8 w-8 text-primary" />
+                        <p className="text-muted-foreground text-lg">AI is generating your plan... please wait.</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
 
                 {/* Stage: Finalized */}
                 {currentStage === 'finalized' && (

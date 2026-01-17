@@ -33,7 +33,7 @@ const civilPrompt = ai.definePrompt({
   output: { schema: CivilConceptOutputSchema },
   prompt: `You are a professional Civil Engineer AI for BrickAi.
 Your task is to generate the first stage of a house plan: the Civil Engineering Concept.
-Adhere strictly to the user's requirements.
+Adhere strictly to the user's requirements. Your output MUST be a set of conceptual drawings and diagrams in data URI format.
 
 User Requirements:
 - Property Details: {{{propertyDetails}}}
@@ -44,8 +44,12 @@ User Requirements:
 - Style Preference: {{{stylePreference}}}
 - Vastu Preference: {{{vastuPreference}}}
 
-Your output must be a conceptual civil layout. Focus on structural and site-level planning.
-- Generate a conceptual civil layout, including setbacks and site utilization.
+Your output must contain the following drawings as data URIs:
+- civilPlanDataUri: A conceptual civil layout drawing, including setbacks and site utilization.
+- foundationPlanDataUri: A conceptual drawing of the foundation plan.
+- columnLayoutDataUri: A conceptual drawing showing the positions of columns/poles.
+
+You must also provide the following details in text format:
 - Define floor-wise space allocation.
 - Propose approximate room sizes.
 - Detail the logic for placing stairs and wet areas (kitchen/bathrooms).
@@ -79,20 +83,20 @@ const architecturalPrompt = ai.definePrompt({
     output: { schema: ArchitecturalConceptOutputSchema },
     prompt: `You are a professional Architect AI for BrickAi.
 Your task is to generate the second stage: the Architectural Concept.
-You MUST build upon the approved Civil Concept provided. Do not change the core layout.
+You MUST build upon the approved Civil Concept drawing provided. Do not change the core layout.
 
-Approved Civil Concept:
-- Conceptual Layout: {{{approvedCivilConcept.conceptualLayout}}}
-- Floor Allocation: {{{approvedCivilConcept.floorAllocation}}}
-- Room Sizes: {{{approvedCivilConcept.roomSizes}}}
-- Stair/Wet Areas: {{{approvedCivilConcept.stairAndWetAreaLogic}}}
+Approved Civil Plan Drawing:
+{{media url=approvedCivilConcept.civilPlanDataUri}}
 
 User Feedback for this stage: {{{userFeedback}}}
 
-Your task is to:
-- Define room connections and circulation paths.
-- Plan conceptual door and window placements for light, ventilation, and views.
+Your task is to generate the following as data URIs:
+- architecturalPlanDataUri: A detailed 2D architectural floor plan showing room connections, circulation, and conceptual door/window placements.
+- threeDModelDataUri: A 3D exterior rendering of the building structure based on the plan.
+
+You must also provide the following details in text format:
 - Detail the zoning strategy (public, private, service areas).
+- Explain your strategy for natural light and cross-ventilation.
 - Explain how the user's preferred style is reflected in the design.
 - Include the mandatory disclaimer.
 `,
@@ -123,22 +127,21 @@ const interiorPrompt = ai.definePrompt({
     output: { schema: InteriorConceptOutputSchema },
     prompt: `You are a professional Interior Designer AI for BrickAi.
 Your task is to generate the final stage: the Interior Design Concept.
-You MUST work within the approved architectural plan.
+You MUST work within the approved architectural plan provided.
 
-Approved Architectural Concept:
-- Room Connections: {{{approvedArchitecturalConcept.roomConnections}}}
-- Door/Window Placement: {{{approvedArchitecturalConcept.doorWindowPlacement}}}
-- Light/Ventilation: {{{approvedArchitecturalConcept.lightAndVentilation}}}
-- Zoning: {{{approvedArchitecturalConcept.zoning}}}
+Approved Architectural Plan Drawing:
+{{media url=approvedArchitecturalConcept.architecturalPlanDataUri}}
 
 User Feedback for this stage: {{{userFeedback}}}
 
-Your task is to:
-- Propose a conceptual furniture layout for key rooms.
+Your task is to generate the following as data URIs:
+- interiorRenderDataUri: A 3D conceptual rendering of a key area (e.g., the main living space).
+- furnitureLayoutPlanDataUri: A 2D conceptual furniture layout diagram for key rooms.
+
+You must also provide the following details in text format:
 - Suggest a cohesive color palette.
 - Recommend materials for flooring, walls, and surfaces.
 - Describe a lighting concept (ambient, task, accent).
-- Provide a text prompt for a text-to-image model to generate a single conceptual image of the main living space.
 - Include the mandatory disclaimer.
 `,
 });
