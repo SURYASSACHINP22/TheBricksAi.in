@@ -1,6 +1,7 @@
 import { properties } from "@/lib/data";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -204,10 +205,18 @@ export default function PropertyDetailsPage({ params }: { params: { id: string }
                     <CardTitle className="font-headline">Location on Map</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="aspect-video bg-muted rounded-md flex items-center justify-center">
-                        <p className="text-muted-foreground">Map placeholder</p>
-                    </div>
-                     <Button variant="outline" className="w-full mt-4"><MapPin className="mr-2 h-4 w-4"/> View on Google Maps</Button>
+                    <iframe
+                        className="aspect-video w-full rounded-md border"
+                        src={`https://maps.google.com/maps?q=${property.latitude},${property.longitude}&z=15&output=embed`}
+                        allowFullScreen
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                    ></iframe>
+                     <Button variant="outline" className="w-full mt-4" asChild>
+                        <Link href={`https://www.google.com/maps/search/?api=1&query=${property.latitude},${property.longitude}`} target="_blank" rel="noopener noreferrer">
+                            <MapPin className="mr-2 h-4 w-4"/> View on Google Maps
+                        </Link>
+                    </Button>
                 </CardContent>
              </Card>
           </div>
