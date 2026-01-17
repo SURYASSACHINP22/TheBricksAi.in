@@ -1,9 +1,16 @@
 'use client';
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import type { Amenity } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ChartTooltipContent } from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
+
+const chartConfig = {
+  distance: {
+    label: "Distance (km)",
+    color: "hsl(var(--primary))",
+  },
+} satisfies ChartConfig;
 
 
 export function DistanceChart({ amenities }: { amenities: Amenity[] }) {
@@ -16,18 +23,31 @@ export function DistanceChart({ amenities }: { amenities: Amenity[] }) {
             <CardDescription>Distances in kilometers (km)</CardDescription>
         </CardHeader>
         <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData} layout="vertical" margin={{ left: 20, right: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                <XAxis type="number" />
-                <YAxis dataKey="name" type="category" width={100} tick={{ fontSize: 12 }} />
-                <Tooltip
-                  cursor={{ fill: 'hsl(var(--background))' }}
-                  content={<ChartTooltipContent />}
+            <ChartContainer config={chartConfig} className="h-[300px] w-full">
+              <BarChart
+                accessibilityLayer
+                data={chartData}
+                layout="vertical"
+                margin={{ left: 10 }}
+              >
+                <CartesianGrid horizontal={false} />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => value.slice(0, 15)}
+                  className="[&>text]:fill-muted-foreground"
                 />
-                <Bar dataKey="distance" radius={[0, 4, 4, 0]} />
+                <XAxis dataKey="distance" type="number" hide />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
+                <Bar dataKey="distance" radius={5} />
               </BarChart>
-            </ResponsiveContainer>
+            </ChartContainer>
         </CardContent>
     </Card>
   );
