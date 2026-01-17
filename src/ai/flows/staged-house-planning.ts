@@ -31,9 +31,9 @@ const civilPrompt = ai.definePrompt({
   name: 'civilConceptPrompt',
   input: { schema: CivilConceptInputSchema },
   output: { schema: CivilConceptOutputSchema },
-  prompt: `You are a professional Civil Engineer AI for BrickAi.
+  prompt: `You are a master Civil Engineer AI for BrickAi, known for creating clear, detailed, and professional-grade conceptual drawings.
 Your task is to generate the first stage of a house plan: the Civil Engineering Concept.
-Adhere strictly to the user's requirements. Your output MUST be a set of conceptual drawings and diagrams in data URI format.
+Adhere strictly to the user's requirements. Your output MUST be a set of high-quality, easy-to-understand conceptual drawings and diagrams in data URI format. The drawings should be clean, precise, and well-labeled, suitable for a client presentation.
 
 User Requirements:
 - Property Details: {{{propertyDetails}}}
@@ -44,10 +44,10 @@ User Requirements:
 - Style Preference: {{{stylePreference}}}
 - Vastu Preference: {{{vastuPreference}}}
 
-Your output must contain the following drawings as data URIs:
-- civilPlanDataUri: A conceptual civil layout drawing, including setbacks and site utilization.
-- foundationPlanDataUri: A conceptual drawing of the foundation plan.
-- columnLayoutDataUri: A conceptual drawing showing the positions of columns/poles.
+Your output must contain the following high-quality drawings as data URIs:
+- civilPlanDataUri: A detailed conceptual civil layout drawing. It must clearly show building placement, boundary lines, setbacks from all sides, site utilization, and access points.
+- foundationPlanDataUri: A detailed conceptual drawing of the foundation plan, indicating the type of foundation proposed (e.g., raft, isolated footing) and its general layout.
+- columnLayoutDataUri: A precise conceptual drawing showing the grid and exact positions of all structural columns/poles.
 
 You must also provide the following details in text format:
 - Define floor-wise space allocation.
@@ -81,7 +81,7 @@ const architecturalPrompt = ai.definePrompt({
     name: 'architecturalConceptPrompt',
     input: { schema: ArchitecturalConceptInputSchema },
     output: { schema: ArchitecturalConceptOutputSchema },
-    prompt: `You are a professional Architect AI for BrickAi.
+    prompt: `You are an expert Architect AI for BrickAi, specializing in photorealistic 3D visualization.
 Your task is to generate the second stage: the Architectural Concept.
 You MUST build upon the approved Civil Concept drawing provided. Do not change the core layout.
 
@@ -91,8 +91,8 @@ Approved Civil Plan Drawing:
 User Feedback for this stage: {{{userFeedback}}}
 
 Your task is to generate the following as data URIs:
-- architecturalPlanDataUri: A detailed 2D architectural floor plan showing room connections, circulation, and conceptual door/window placements.
-- threeDModelDataUri: A 3D exterior rendering of the building structure based on the plan.
+- architecturalPlanDataUri: A detailed 2D architectural floor plan. This should clearly show room connections, circulation paths, and precise conceptual placements for doors and windows.
+- threeDModelDataUri: A high-quality, photorealistic 3D exterior rendering of the building. To provide a comprehensive view, this should feel like a model that can be viewed from multiple angles. While it is a 2D image, it should be rendered with depth and perspective to give a clear sense of the building's form, materials, and overall aesthetic.
 
 You must also provide the following details in text format:
 - Detail the zoning strategy (public, private, service areas).
@@ -125,7 +125,7 @@ const interiorPrompt = ai.definePrompt({
     name: 'interiorConceptPrompt',
     input: { schema: InteriorConceptInputSchema },
     output: { schema: InteriorConceptOutputSchema },
-    prompt: `You are a professional Interior Designer AI for BrickAi.
+    prompt: `You are a visionary Interior Designer AI for BrickAi.
 Your task is to generate the final stage: the Interior Design Concept.
 You MUST work within the approved architectural plan provided.
 
@@ -135,8 +135,8 @@ Approved Architectural Plan Drawing:
 User Feedback for this stage: {{{userFeedback}}}
 
 Your task is to generate the following as data URIs:
-- interiorRenderDataUri: A 3D conceptual rendering of a key area (e.g., the main living space).
-- furnitureLayoutPlanDataUri: A 2D conceptual furniture layout diagram for key rooms.
+- interiorRenderDataUri: A high-quality, photorealistic 3D conceptual rendering of a key interior area (e.g., the main living space). This should showcase the suggested color palette, materials, and lighting concept in action.
+- furnitureLayoutPlanDataUri: A clear and detailed 2D conceptual furniture layout diagram for key rooms, showing traffic flow and spacing.
 
 You must also provide the following details in text format:
 - Suggest a cohesive color palette.
