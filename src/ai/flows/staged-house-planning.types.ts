@@ -10,6 +10,7 @@ export const CivilConceptInputSchema = z.object({
   purpose: z.string().describe('Purpose of the house (e.g., self-use, rental).'),
   stylePreference: z.string().optional().describe('Optional style preferences for the house design.'),
   vastuPreference: z.string().optional().describe('Optional Vastu preferences for the house design.'),
+  userFeedback: z.string().optional().describe('Feedback on a previously generated concept for revision.'),
 });
 export type CivilConceptInput = z.infer<typeof CivilConceptInputSchema>;
 
@@ -41,7 +42,7 @@ export type CivilConceptOutput = z.infer<typeof CivilConceptOutputSchema>;
 //== STAGE 2: ARCHITECTURAL CONCEPT ===========================================
 
 export const ArchitecturalConceptInputSchema = z.object({
-  approvedCivilConcept: CivilConceptOutputSchema.describe('The approved civil engineering concept from Stage 1.'),
+  approvedCivilPlanDataUri: z.string().describe("The data URI of the approved civil plan drawing from Stage 1."),
   userFeedback: z.string().optional().describe('Any additional feedback or minor adjustments from the user for this stage.'),
 });
 export type ArchitecturalConceptInput = z.infer<typeof ArchitecturalConceptInputSchema>;
@@ -68,8 +69,7 @@ export type ArchitecturalConceptOutput = z.infer<typeof ArchitecturalConceptOutp
 //== STAGE 3: INTERIOR DESIGN CONCEPT =========================================
 
 export const InteriorConceptInputSchema = z.object({
-  approvedArchitecturalConcept: ArchitecturalConceptOutputSchema.describe('The approved architectural concept from Stage 2.'),
-  civilConcept: CivilConceptOutputSchema.describe('The original civil concept for context.'),
+  approvedArchitecturalPlanDataUri: z.string().describe("The data URI of the approved architectural plan from Stage 2."),
   userFeedback: z.string().optional().describe('Any additional feedback from the user for this stage.'),
 });
 export type InteriorConceptInput = z.infer<typeof InteriorConceptInputSchema>;

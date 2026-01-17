@@ -44,6 +44,11 @@ User Requirements:
 - Style Preference: {{{stylePreference}}}
 - Vastu Preference: {{{vastuPreference}}}
 
+{{#if userFeedback}}
+User Feedback for Revision:
+{{{userFeedback}}}
+{{/if}}
+
 Your output must contain the following high-quality drawings as data URIs:
 - civilPlanDataUri: A detailed conceptual civil layout drawing. It must clearly show building placement, boundary lines, setbacks from all sides, site utilization, and access points.
 - foundationPlanDataUri: A detailed conceptual drawing of the foundation plan, indicating the type of foundation proposed (e.g., raft, isolated footing) and its general layout.
@@ -86,7 +91,7 @@ Your task is to generate the second stage: the Architectural Concept.
 You MUST build upon the approved Civil Concept drawing provided. Do not change the core layout.
 
 Approved Civil Plan Drawing:
-{{media url=approvedCivilConcept.civilPlanDataUri}}
+{{media url=approvedCivilPlanDataUri}}
 
 User Feedback for this stage: {{{userFeedback}}}
 
@@ -130,7 +135,7 @@ Your task is to generate the final stage: the Interior Design Concept.
 You MUST work within the approved architectural plan provided.
 
 Approved Architectural Plan Drawing:
-{{media url=approvedArchitecturalConcept.architecturalPlanDataUri}}
+{{media url=approvedArchitecturalPlanDataUri}}
 
 User Feedback for this stage: {{{userFeedback}}}
 

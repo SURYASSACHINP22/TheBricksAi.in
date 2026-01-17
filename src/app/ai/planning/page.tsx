@@ -77,6 +77,10 @@ export default function StagedAIHousePlanningPage() {
         stylePreference: 'Modern',
         vastuPreference: 'flexible',
     });
+    
+    const [civilFeedback, setCivilFeedback] = useState('');
+    const [archFeedback, setArchFeedback] = useState('');
+    const [interiorFeedback, setInteriorFeedback] = useState('');
 
     const [civilPlan, setCivilPlan] = useState<CivilConceptOutput | null>(null);
     const [civilStatus, setCivilStatus] = useState<Status>('pending');
@@ -85,25 +89,33 @@ export default function StagedAIHousePlanningPage() {
     const [interiorPlan, setInteriorPlan] = useState<InteriorConceptOutput | null>(null);
     const [interiorStatus, setInteriorStatus] = useState<Status>('pending');
     
-    const handleGenerateCivil = async () => {
+    const handleGenerateCivil = async (feedback?: string) => {
         setIsLoading(true);
-        const result = await generateCivilAction(formValues);
+        const input = feedback ? { ...formValues, userFeedback: feedback } : formValues;
+        const result = await generateCivilAction(input);
         setIsLoading(false);
+
         if('error' in result) {
             toast({ variant: 'destructive', title: 'Error Generating Civil Plan', description: result.error });
         } else {
             setCivilPlan(result);
             setCivilStatus('generated');
             setCurrentStage('civil');
-            toast({ title: 'Civil Concept Generated!', description: 'Please review the conceptual civil layout.' });
+            setCivilFeedback('');
+            toast({ title: feedback ? 'Civil Concept Revised!' : 'Civil Concept Generated!', description: 'Please review the conceptual civil layout.' });
         }
     };
 
-    const handleApproveCivil = async () => {
+    const handleApproveCivil = async (feedback?: string) => {
         setCivilStatus('approved');
         setCurrentStage('architecture');
         setIsLoading(true);
-        const result = await generateArchitecturalAction({ approvedCivilConcept: civilPlan! });
+        
+        const result = await generateArchitecturalAction({ 
+            approvedCivilPlanDataUri: civilPlan!.civilPlanDataUri,
+            userFeedback: feedback,
+        });
+
         setIsLoading(false);
         if('error' in result) {
             toast({ variant: 'destructive', title: 'Error Generating Architectural Plan', description: result.error });
@@ -112,15 +124,29 @@ export default function StagedAIHousePlanningPage() {
         } else {
             setArchPlan(result);
             setArchStatus('generated');
-            toast({ title: 'Architectural Concept Generated!', description: 'Please review the architectural details.' });
+            setArchFeedback('');
+            toast({ title: feedback ? 'Architectural Concept Revised!' : 'Architectural Concept Generated!', description: 'Please review the architectural details.' });
         }
     };
+    
+    const handleReviseArch = async () => {
+        if (!archFeedback.trim()) {
+            toast({ variant: 'destructive', title: 'Feedback Required', description: 'Please enter your feedback before requesting changes.' });
+            return;
+        }
+        await handleApproveCivil(archFeedback);
+    }
 
-    const handleApproveArch = async () => {
+    const handleApproveArch = async (feedback?: string) => {
         setArchStatus('approved');
         setCurrentStage('interior');
         setIsLoading(true);
-        const result = await generateInteriorAction({ approvedArchitecturalConcept: archPlan!, civilConcept: civilPlan! });
+
+        const result = await generateInteriorAction({ 
+            approvedArchitecturalPlanDataUri: archPlan!.architecturalPlanDataUri,
+            userFeedback: feedback
+        });
+
         setIsLoading(false);
         if('error' in result) {
             toast({ variant: 'destructive', title: 'Error Generating Interior Plan', description: result.error });
@@ -129,9 +155,18 @@ export default function StagedAIHousePlanningPage() {
         } else {
             setInteriorPlan(result);
             setInteriorStatus('generated');
-            toast({ title: 'Interior Design Concept Generated!', description: 'Please review the final design concepts.' });
+            setInteriorFeedback('');
+            toast({ title: feedback ? 'Interior Design Revised' : 'Interior Design Concept Generated!', description: 'Please review the final design concepts.' });
         }
     };
+
+    const handleReviseInterior = async () => {
+        if (!interiorFeedback.trim()) {
+            toast({ variant: 'destructive', title: 'Feedback Required', description: 'Please enter your feedback before requesting changes.' });
+            return;
+        }
+        await handleApproveArch(interiorFeedback);
+    }
 
     const handleApproveInterior = () => {
         setInteriorStatus('approved');
@@ -139,14 +174,39 @@ export default function StagedAIHousePlanningPage() {
         toast({ title: 'Plan Finalized!', description: 'Your complete house plan has been saved.' });
     };
 
-    const getStatusBadge = (status: Status) => {
-        switch(status) {
-            case 'pending': return 'bg-gray-100 text-gray-500';
-            case 'generated': return 'bg-blue-100 text-blue-600';
-            case 'approved': return 'bg-green-100 text-green-600';
-            case 'revision': return 'bg-yellow-100 text-yellow-600';
-            default: return 'bg-gray-100 text-gray-500';
-        }
+    const renderFeedbackAndActions = (
+        stage: Stage, 
+        feedback: string, 
+        setFeedback: (val: string) => void,
+        onRevise: () => void,
+        onApprove: () => void,
+        approveText: string,
+        onBack?: () => void
+    ) => {
+        return (
+            <div className="mt-6 space-y-4">
+                 <div className="space-y-2">
+                    <Label htmlFor={`${stage}-feedback`}>Feedback / Changes (Optional)</Label>
+                    <Textarea 
+                        id={`${stage}-feedback`}
+                        placeholder={`e.g., "Make the master bedroom larger", "I prefer a different color for the kitchen"...`}
+                        value={feedback}
+                        onChange={(e) => setFeedback(e.target.value)}
+                    />
+                </div>
+                <div className="flex justify-between gap-4 flex-wrap">
+                    {onBack ? (
+                         <Button variant="ghost" onClick={onBack} disabled={isLoading}><ArrowLeft/> Go Back</Button>
+                    ) : <div></div>}
+                    <div className="flex gap-4 flex-wrap">
+                        <Button variant="outline" disabled={isLoading} onClick={onRevise}><Pencil/> Request Changes</Button>
+                        <Button className="bg-green-600 hover:bg-green-700" onClick={onApprove} disabled={isLoading}>
+                            {isLoading ? <Loader2 className="animate-spin"/> : <Sparkles/>} {approveText}
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        )
     }
 
     const renderConceptCard = (title: string, content: Record<string, any> | null, disclaimer: string) => {
@@ -162,7 +222,7 @@ export default function StagedAIHousePlanningPage() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                     {images.length > 0 && (
-                        <div className='space-y-4'>
+                        <div className='grid md:grid-cols-2 gap-6'>
                             {images.map(([key, value]) => {
                                 const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/Data Uri/i, '').replace(/^./, str => str.toUpperCase());
                                 return (
@@ -298,13 +358,13 @@ export default function StagedAIHousePlanningPage() {
                 {(currentStage === 'civil' || currentStage === 'architecture' || currentStage === 'interior' || currentStage === 'finalized') && civilPlan && (
                     <div className={cn(currentStage !== 'civil' && 'opacity-60 pointer-events-none')}>
                         {renderConceptCard('Civil Engineering Concept', civilPlan, civilPlan?.disclaimer || '')}
-                        {currentStage === 'civil' && (
-                            <div className="mt-6 flex justify-end gap-4">
-                                <Button variant="outline" disabled={isLoading}><Pencil/> Request Changes</Button>
-                                <Button className="bg-green-600 hover:bg-green-700" onClick={handleApproveCivil} disabled={isLoading}>
-                                    {isLoading ? <Loader2 className="animate-spin"/> : <Sparkles/>} Approve & Generate Architecture
-                                </Button>
-                            </div>
+                        {currentStage === 'civil' && renderFeedbackAndActions(
+                            'civil',
+                            civilFeedback,
+                            setCivilFeedback,
+                            () => handleGenerateCivil(civilFeedback),
+                            () => handleApproveCivil(civilFeedback),
+                            'Approve & Generate Architecture'
                         )}
                     </div>
                 )}
@@ -314,16 +374,14 @@ export default function StagedAIHousePlanningPage() {
                 {(currentStage === 'architecture' || currentStage === 'interior' || currentStage === 'finalized') && archPlan && (
                      <div className={cn(currentStage !== 'architecture' && 'opacity-60 pointer-events-none')}>
                         {renderConceptCard('Architectural Concept', archPlan, archPlan?.disclaimer || '')}
-                        {currentStage === 'architecture' && (
-                            <div className="mt-6 flex justify-between gap-4">
-                                <Button variant="ghost" onClick={() => setCurrentStage('civil')} disabled={isLoading}><ArrowLeft/> Go Back to Civil</Button>
-                                <div className="flex gap-4">
-                                    <Button variant="outline" disabled={isLoading}><Pencil/> Request Changes</Button>
-                                    <Button className="bg-green-600 hover:bg-green-700" onClick={handleApproveArch} disabled={isLoading}>
-                                        {isLoading ? <Loader2 className="animate-spin"/> : <Sparkles/>} Approve & Generate Interior Design
-                                    </Button>
-                                </div>
-                            </div>
+                        {currentStage === 'architecture' && renderFeedbackAndActions(
+                            'architecture',
+                            archFeedback,
+                            setArchFeedback,
+                            handleReviseArch,
+                            () => handleApproveArch(archFeedback),
+                            'Approve & Generate Interior Design',
+                            () => setCurrentStage('civil')
                         )}
                     </div>
                 )}
@@ -332,16 +390,14 @@ export default function StagedAIHousePlanningPage() {
                 {(currentStage === 'interior' || currentStage === 'finalized') && interiorPlan && (
                      <div className={cn(currentStage !== 'interior' && 'opacity-60 pointer-events-none')}>
                         {renderConceptCard('Interior Design Concept', interiorPlan, interiorPlan?.disclaimer || '')}
-                        {currentStage === 'interior' && (
-                            <div className="mt-6 flex justify-between gap-4">
-                                <Button variant="ghost" onClick={() => setCurrentStage('architecture')} disabled={isLoading}><ArrowLeft/> Go Back to Architecture</Button>
-                                <div className="flex gap-4">
-                                    <Button variant="outline" disabled={isLoading}><Pencil/> Request Changes</Button>
-                                    <Button className="bg-green-600 hover:bg-green-700" onClick={handleApproveInterior} disabled={isLoading}>
-                                        <Sparkles/> Finalize Plan
-                                    </Button>
-                                </div>
-                            </div>
+                        {currentStage === 'interior' && renderFeedbackAndActions(
+                            'interior',
+                            interiorFeedback,
+                            setInteriorFeedback,
+                            handleReviseInterior,
+                            handleApproveInterior,
+                            'Finalize Plan',
+                            () => setCurrentStage('architecture')
                         )}
                     </div>
                 )}
