@@ -1,3 +1,52 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "property-1",
+      "description": "Luxurious villa with a pool",
+      "imageUrl": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtb2Rlcm4lMjB2aWxsYXxlbnwwfHx8fDE3Njg1NTA1OTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "modern villa"
+    },
+    {
+      "id": "property-2",
+      "description": "Spacious plot of residential land",
+      "imageUrl": "https://images.unsplash.com/photo-1663436296541-f1958f6d3b59?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxlbXB0eSUyMGxhbmR8ZW58MHx8fHwxNzY4NTc5OTY1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "empty land"
+    },
+    {
+      "id": "property-3",
+      "description": "Urban apartment building",
+      "imageUrl": "https://images.unsplash.com/photo-1578553243470-db6e5107cb44?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjaXR5JTIwYXBhcnRtZW50fGVufDB8fHx8MTc2ODYwNzgzNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "city apartment"
+    },
+    {
+      "id": "property-4",
+      "description": "Agricultural farmland with a barn",
+      "imageUrl": "https://images.unsplash.com/photo-1524553496250-1a722745ae00?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYXJtbGFuZHxlbnwwfHx8fDE3Njg2MjczODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "farmland"
+    },
+    {
+      "id": "ai-plan-1",
+      "description": "AI generated conceptual floor plan",
+      "imageUrl": "https://images.unsplash.com/photo-1542621334-a254cf47733d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmbG9vciUyMHBsYW58ZW58MHx8fHwxNzY4NTkzMzk4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "floor plan"
+    },
+    {
+      "id": "ai-plan-2",
+      "description": "AI generated 3D render of a house exterior",
+      "imageUrl": "https://images.unsplash.com/photo-1598228723793-52759bba239c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8aG91c2UlMjBleHRlcmlvcnxlbnwwfHx8fDE3Njg1NzQ5MzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "house exterior"
+    },
+    {
+      "id": "plan-before",
+      "description": "Original user-uploaded house plan",
+      "imageUrl": "https://images.unsplash.com/photo-1721244653652-268631ec049a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhcmNoaXRlY3R1cmFsJTIwcGxhbnxlbnwwfHx8fDE3Njg1Nzg0NzB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "architectural plan"
+    },
+    {
+      "id": "plan-after",
+      "description": "AI-improved house plan",
+      "imageUrl": "https://images.unsplash.com/photo-1763888786556-4f8524c1cab2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxpbXByb3ZlZCUyMHBsYW58ZW58MHx8fHwxNzY4NjI3MzgzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "improved plan"
+    }
+  ]
 }
