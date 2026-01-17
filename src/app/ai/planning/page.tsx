@@ -16,7 +16,7 @@ export default function AIHousePlanningPage() {
           <CardHeader className="px-0">
             <CardTitle className="font-headline text-4xl font-bold flex items-center gap-3"><BrainCircuit className="w-10 h-10 text-primary" /> AI House Planning</CardTitle>
             <CardDescription>Get a conceptual layout for your dream home based on your requirements.
-            </Protocols>
+            </CardDescription>
           </CardHeader>
 
           <Card>
@@ -128,3 +128,5 @@ export default function AIHousePlanningPage() {
     </div>
   );
 }
+
+    

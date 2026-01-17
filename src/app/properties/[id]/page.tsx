@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
-  ShieldCheck, ShieldAlert, Shield, MapPin, Building, Road, CheckCircle, XCircle, FileText, Download,
+  ShieldCheck, ShieldAlert, Shield, MapPin, Building, Route, CheckCircle, XCircle, FileText, Download,
   Heart, GitCompareArrows, MessageSquare, Briefcase, User, Calendar, Tag, Info
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,6 +21,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { CartesianGrid } from "recharts";
 
 type VerificationProps = {
   status: Property['verificationStatus'];
@@ -123,7 +124,7 @@ export default function PropertyDetailsPage({ params }: { params: { id: string }
                         <div className="flex items-start gap-3"><User className="h-5 w-5 mt-0.5 text-primary" /><p><span className="font-semibold text-foreground">Owner:</span> {property.ownerName}</p></div>
                         <div className="flex items-start gap-3"><Tag className="h-5 w-5 mt-0.5 text-primary" /><p><span className="font-semibold text-foreground">Land Type:</span> <Badge variant="secondary">{property.landType}</Badge></p></div>
                         <div className="flex items-start gap-3"><Building className="h-5 w-5 mt-0.5 text-primary" /><p><span className="font-semibold text-foreground">Area:</span> {property.areaSqFt.toLocaleString()} sq. ft.</p></div>
-                        <div className="flex items-start gap-3"><Road className="h-5 w-5 mt-0.5 text-primary" /><p className="flex items-center gap-2"><span className="font-semibold text-foreground">Road Access:</span> {property.roadAccess ? <CheckCircle className="h-5 w-5 text-green-500" /> : <XCircle className="h-5 w-5 text-red-500" />}</p></div>
+                        <div className="flex items-start gap-3"><Route className="h-5 w-5 mt-0.5 text-primary" /><p className="flex items-center gap-2"><span className="font-semibold text-foreground">Road Access:</span> {property.roadAccess ? <CheckCircle className="h-5 w-5 text-green-500" /> : <XCircle className="h-5 w-5 text-red-500" />}</p></div>
                         <div className="flex items-start gap-3"><Info className="h-5 w-5 mt-0.5 text-primary" /><p className="flex items-center gap-2"><span className="font-semibold text-foreground">Corner Plot:</span> {property.cornerPlot ? <CheckCircle className="h-5 w-5 text-green-500" /> : <XCircle className="h-5 w-5 text-red-500" />}</p></div>
                     </div>
                      <Separator />
@@ -244,3 +245,5 @@ export default function PropertyDetailsPage({ params }: { params: { id: string }
     </div>
   );
 }
+
+    
