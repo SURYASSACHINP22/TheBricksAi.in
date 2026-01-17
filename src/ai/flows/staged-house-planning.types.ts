@@ -10,6 +10,7 @@ export const CivilConceptInputSchema = z.object({
   purpose: z.string().describe('Purpose of the house (e.g., self-use, rental).'),
   stylePreference: z.string().optional().describe('Optional style preferences for the house design.'),
   vastuPreference: z.string().optional().describe('Optional Vastu preferences for the house design.'),
+  prompt: z.string().optional().describe('An open-ended prompt from the user with additional requirements or context.'),
   userFeedback: z.string().optional().describe('Feedback on a previously generated concept for revision.'),
 });
 export type CivilConceptInput = z.infer<typeof CivilConceptInputSchema>;

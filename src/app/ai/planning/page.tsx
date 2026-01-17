@@ -76,6 +76,7 @@ export default function StagedAIHousePlanningPage() {
         budgetRange: '75L',
         stylePreference: 'Modern',
         vastuPreference: 'flexible',
+        prompt: '',
     });
     
     const [civilFeedback, setCivilFeedback] = useState('');
@@ -91,7 +92,7 @@ export default function StagedAIHousePlanningPage() {
     
     const handleGenerateCivil = async (feedback?: string) => {
         setIsLoading(true);
-        const input = feedback ? { ...formValues, userFeedback: feedback } : formValues;
+        const input: CivilConceptInput = feedback ? { ...formValues, userFeedback: feedback } : formValues;
         const result = await generateCivilAction(input);
         setIsLoading(false);
 
@@ -106,14 +107,15 @@ export default function StagedAIHousePlanningPage() {
         }
     };
 
-    const handleApproveCivil = async (feedback?: string) => {
+    const handleApproveCivil = async () => {
+        if (!civilPlan) return;
         setCivilStatus('approved');
         setCurrentStage('architecture');
         setIsLoading(true);
         
         const result = await generateArchitecturalAction({ 
-            approvedCivilPlanDataUri: civilPlan!.civilPlanDataUri,
-            userFeedback: feedback,
+            approvedCivilPlanDataUri: civilPlan.civilPlanDataUri,
+            userFeedback: civilFeedback,
         });
 
         setIsLoading(false);
@@ -125,7 +127,8 @@ export default function StagedAIHousePlanningPage() {
             setArchPlan(result);
             setArchStatus('generated');
             setArchFeedback('');
-            toast({ title: feedback ? 'Architectural Concept Revised!' : 'Architectural Concept Generated!', description: 'Please review the architectural details.' });
+            toast({ title: civilFeedback ? 'Architectural Concept Revised!' : 'Architectural Concept Generated!', description: 'Please review the architectural details.' });
+            setCivilFeedback('');
         }
     };
     
@@ -134,17 +137,33 @@ export default function StagedAIHousePlanningPage() {
             toast({ variant: 'destructive', title: 'Feedback Required', description: 'Please enter your feedback before requesting changes.' });
             return;
         }
-        await handleApproveCivil(archFeedback);
+        if (!civilPlan) return;
+        
+        setIsLoading(true);
+        const result = await generateArchitecturalAction({ 
+            approvedCivilPlanDataUri: civilPlan.civilPlanDataUri,
+            userFeedback: archFeedback,
+        });
+        setIsLoading(false);
+
+        if ('error' in result) {
+            toast({ variant: 'destructive', title: 'Error Revising Architectural Plan', description: result.error });
+        } else {
+            setArchPlan(result);
+            setArchStatus('generated');
+            toast({ title: 'Architectural Concept Revised!', description: 'Your changes have been applied.'});
+        }
     }
 
-    const handleApproveArch = async (feedback?: string) => {
+    const handleApproveArch = async () => {
+        if (!archPlan) return;
         setArchStatus('approved');
         setCurrentStage('interior');
         setIsLoading(true);
 
         const result = await generateInteriorAction({ 
-            approvedArchitecturalPlanDataUri: archPlan!.architecturalPlanDataUri,
-            userFeedback: feedback
+            approvedArchitecturalPlanDataUri: archPlan.architecturalPlanDataUri,
+            userFeedback: archFeedback,
         });
 
         setIsLoading(false);
@@ -156,7 +175,8 @@ export default function StagedAIHousePlanningPage() {
             setInteriorPlan(result);
             setInteriorStatus('generated');
             setInteriorFeedback('');
-            toast({ title: feedback ? 'Interior Design Revised' : 'Interior Design Concept Generated!', description: 'Please review the final design concepts.' });
+            toast({ title: archFeedback ? 'Interior Design Revised' : 'Interior Design Concept Generated!', description: 'Please review the final design concepts.' });
+            setArchFeedback('');
         }
     };
 
@@ -165,7 +185,22 @@ export default function StagedAIHousePlanningPage() {
             toast({ variant: 'destructive', title: 'Feedback Required', description: 'Please enter your feedback before requesting changes.' });
             return;
         }
-        await handleApproveArch(interiorFeedback);
+        if (!archPlan) return;
+
+        setIsLoading(true);
+         const result = await generateInteriorAction({ 
+            approvedArchitecturalPlanDataUri: archPlan.architecturalPlanDataUri,
+            userFeedback: interiorFeedback,
+        });
+        setIsLoading(false);
+
+        if('error' in result) {
+            toast({ variant: 'destructive', title: 'Error Revising Interior Plan', description: result.error });
+        } else {
+            setInteriorPlan(result);
+            setInteriorStatus('generated');
+            toast({ title: 'Interior Design Revised!', description: 'Your changes have been applied.' });
+        }
     }
 
     const handleApproveInterior = () => {
@@ -199,7 +234,7 @@ export default function StagedAIHousePlanningPage() {
                          <Button variant="ghost" onClick={onBack} disabled={isLoading}><ArrowLeft/> Go Back</Button>
                     ) : <div></div>}
                     <div className="flex gap-4 flex-wrap">
-                        <Button variant="outline" disabled={isLoading} onClick={onRevise}><Pencil/> Request Changes</Button>
+                        <Button variant="outline" disabled={isLoading || !feedback.trim()} onClick={onRevise}><Pencil/> Request Changes</Button>
                         <Button className="bg-green-600 hover:bg-green-700" onClick={onApprove} disabled={isLoading}>
                             {isLoading ? <Loader2 className="animate-spin"/> : <Sparkles/>} {approveText}
                         </Button>
@@ -346,6 +381,19 @@ export default function StagedAIHousePlanningPage() {
                                     </Select>
                                 </div>
                             </div>
+                             <div className="space-y-2">
+                                <Label htmlFor="prompt">Detailed Requirements (Optional)</Label>
+                                <Textarea
+                                    id="prompt"
+                                    placeholder="e.g., I need a home office with lots of natural light, a large kitchen island for my family, and a separate entrance for a guest suite..."
+                                    value={formValues.prompt || ''}
+                                    onChange={e => setFormValues({...formValues, prompt: e.target.value})}
+                                    rows={4}
+                                />
+                                <p className="text-sm text-muted-foreground">
+                                    Provide any specific details or preferences not covered above.
+                                </p>
+                            </div>
                             <Button type="submit" size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>
                                 {isLoading ? <Loader2 className="animate-spin" /> : <Wand2 />} Generate Civil Concept
                             </Button>
@@ -363,7 +411,7 @@ export default function StagedAIHousePlanningPage() {
                             civilFeedback,
                             setCivilFeedback,
                             () => handleGenerateCivil(civilFeedback),
-                            () => handleApproveCivil(civilFeedback),
+                            handleApproveCivil,
                             'Approve & Generate Architecture'
                         )}
                     </div>
@@ -379,7 +427,7 @@ export default function StagedAIHousePlanningPage() {
                             archFeedback,
                             setArchFeedback,
                             handleReviseArch,
-                            () => handleApproveArch(archFeedback),
+                            handleApproveArch,
                             'Approve & Generate Interior Design',
                             () => setCurrentStage('civil')
                         )}

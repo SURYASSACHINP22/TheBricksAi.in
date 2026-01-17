@@ -44,6 +44,11 @@ User Requirements:
 - Style Preference: {{{stylePreference}}}
 - Vastu Preference: {{{vastuPreference}}}
 
+{{#if prompt}}
+User's Detailed Prompt:
+{{{prompt}}}
+{{/if}}
+
 {{#if userFeedback}}
 User Feedback for Revision:
 {{{userFeedback}}}
