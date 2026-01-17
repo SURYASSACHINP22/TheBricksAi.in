@@ -3,15 +3,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { BrainCircuit, Info, Calculator, Brick, BarChart } from "lucide-react";
+import { BrainCircuit, Info, Calculator, ToyBrick, BarChart } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 const estimatedMaterials = [
-  { name: "Cement", quantity: "800 bags", icon: Brick },
+  { name: "Cement", quantity: "800 bags", icon: ToyBrick },
   { name: "Steel", quantity: "6 tons", icon: BarChart },
-  { name: "Bricks", quantity: "25,000 units", icon: Brick },
-  { name: "Sand", quantity: "2,200 cft", icon: Brick },
-  { name: "Aggregate", quantity: "1,800 cft", icon: Brick },
+  { name: "Bricks", quantity: "25,000 units", icon: ToyBrick },
+  { name: "Sand", quantity: "2,200 cft", icon: ToyBrick },
+  { name: "Aggregate", quantity: "1,800 cft", icon: ToyBrick },
 ];
 
 export default function MaterialEstimationPage() {
